@@ -1,0 +1,9 @@
+node_modules/
+dist/
+db/*.sqlite
+db/*.sqlite-shm
+db/*.sqlite-wal
+.api*.log
+.vite*.log
+*.tsbuildinfo
+.DS_Store
