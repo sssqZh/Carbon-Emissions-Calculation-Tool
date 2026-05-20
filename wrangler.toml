@@ -1,0 +1,8 @@
+name = "carbon-emissions-calculator"
+compatibility_date = "2025-05-20"
+pages_build_output_dir = "dist"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "carbon-db"
+database_id = "PLACEHOLDER__CREATE_VIA_WRANGLER"

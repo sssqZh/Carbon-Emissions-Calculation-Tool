@@ -7,3 +7,5 @@ db/*.sqlite-wal
 .vite*.log
 *.tsbuildinfo
 .DS_Store
+.wrangler/
+.wrangler-deploy/
