@@ -9,7 +9,7 @@
     "dev:api": "node server/index.mjs",
     "db:init": "node scripts/init-db.mjs",
     "db:reset": "node scripts/init-db.mjs --reset",
-    "build": "tsc --noEmit && vite build",
+    "build": "tsc --noEmit && tsc --noEmit -p functions/tsconfig.json && vite build",
     "preview": "vite preview --host 127.0.0.1",
     "deploy": "npm run build && wrangler pages deploy dist",
     "db:create": "wrangler d1 create carbon-db",

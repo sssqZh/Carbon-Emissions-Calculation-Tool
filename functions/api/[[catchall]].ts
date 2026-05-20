@@ -16,17 +16,18 @@ function errorResponse(message: string, status = 400): Response {
   return jsonResponse({ error: message }, status);
 }
 
-function assertSlug(value: string): void {
-  if (!/^[a-z0-9-]+$/.test(value)) {
-    throw new ResponseError('Invalid calculator slug', 400);
-  }
-}
-
 class ResponseError extends Error {
   statusCode: number;
+
   constructor(message: string, statusCode: number) {
     super(message);
     this.statusCode = statusCode;
+  }
+}
+
+function assertSlug(value: string): void {
+  if (!/^[a-z0-9-]+$/.test(value)) {
+    throw new ResponseError('Invalid calculator slug', 400);
   }
 }
 
@@ -34,6 +35,7 @@ async function readRequestJson(request: Request): Promise<Record<string, unknown
   if (request.headers.get('content-type')?.includes('application/json') === false) {
     throw new ResponseError('Content-Type must be application/json', 400);
   }
+
   try {
     const text = await request.text();
     return text ? JSON.parse(text) : {};
@@ -184,43 +186,36 @@ export async function onRequest(context: { request: Request; env: Env }): Promis
   const method = request.method;
 
   try {
-    // GET /api/health
     if (method === 'GET' && pathname === '/api/health') {
       return jsonResponse({ ok: true });
     }
 
-    // GET /api/calculators
     if (method === 'GET' && pathname === '/api/calculators') {
       const data = await getCalculators(env.DB);
       return jsonResponse(data);
     }
 
-    // GET /api/calculators/:slug
     const calcMatch = pathname.match(/^\/api\/calculators\/([a-z0-9-]+)$/);
     if (method === 'GET' && calcMatch) {
       const data = await getCalculatorDetail(env.DB, calcMatch[1]);
       return jsonResponse(data);
     }
 
-    // GET /api/emission-factors
     if (method === 'GET' && pathname === '/api/emission-factors') {
       const data = await getEmissionFactors(env.DB);
       return jsonResponse(data);
     }
 
-    // GET /api/references
     if (method === 'GET' && pathname === '/api/references') {
       const data = await getReferences(env.DB);
       return jsonResponse(data);
     }
 
-    // GET /api/calculation-records
     if (method === 'GET' && pathname === '/api/calculation-records') {
       const data = await getCalculationRecords(env.DB);
       return jsonResponse(data);
     }
 
-    // POST /api/calculation-records
     if (method === 'POST' && pathname === '/api/calculation-records') {
       const data = await createCalculationRecord(env.DB, request);
       return jsonResponse(data, 201);

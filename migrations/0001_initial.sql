@@ -1,5 +1,4 @@
 -- Migration: Initial schema and seed data
--- Combined from db/schema.sql and db/seed.sql
 
 CREATE TABLE IF NOT EXISTS calculators (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -100,8 +99,6 @@ FOR EACH ROW
 BEGIN
   UPDATE emission_factors SET updated_at = datetime('now') WHERE id = OLD.id;
 END;
-
--- Seed data
 
 INSERT OR IGNORE INTO calculators (slug, name, description, category, status, sort_order) VALUES
   ('personal-footprint', '个人碳足迹估算', '基于出行、饮食、居住和消费数据估算个人碳排放。', '生活方式', 'draft', 10),
