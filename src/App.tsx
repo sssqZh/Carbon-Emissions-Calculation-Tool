@@ -12,6 +12,7 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 import { type FormEvent, useEffect, useMemo, useState } from 'react';
+import { calculate } from '../shared/calculations';
 import {
   createDraftRecord,
   fetchCalculationRecords,
@@ -318,6 +319,15 @@ function CalculatorDetailPanel({
   const [formState, setFormState] = useState<FormState>(initialState);
   const [savedMessage, setSavedMessage] = useState<string | null>(null);
 
+  // Live preview calculation
+  const liveResult = useMemo(() => {
+    try {
+      return calculate(calculator.slug, formState);
+    } catch {
+      return null;
+    }
+  }, [calculator.slug, formState]);
+
   useEffect(() => {
     setFormState(initialState);
     setSavedMessage(null);
@@ -327,7 +337,9 @@ function CalculatorDetailPanel({
     event.preventDefault();
     setSavedMessage(null);
     await createDraftRecord(calculator.slug, formState);
-    setSavedMessage('已保存为草稿记录，等待公式接入后生成真实结果。');
+    setSavedMessage(liveResult
+      ? `已保存计算记录，总排放量: ${liveResult.total_emission} ${liveResult.emission_unit}`
+      : '已保存计算记录。');
     onRecordCreated();
   }
 
@@ -357,12 +369,29 @@ function CalculatorDetailPanel({
         <div className="result-shell">
           <div>
             <p className="eyebrow">结果预览</p>
-            <strong>公式待接入</strong>
-            <span>当前只保存输入快照，后续将展示总排放量、分项贡献和资料来源。</span>
+            {liveResult && liveResult.total_emission > 0 ? (
+              <>
+                <strong>{liveResult.total_emission} {liveResult.emission_unit}</strong>
+                {liveResult.breakdown.length > 0 && (
+                  <div className="breakdown-list">
+                    {liveResult.breakdown.map((item, i) => (
+                      <span key={i}>
+                        {item.label}: {item.value} {item.unit}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </>
+            ) : (
+              <>
+                <strong>等待输入</strong>
+                <span>填写上方字段后这里将显示实时估算结果。</span>
+              </>
+            )}
           </div>
           <button className="primary-button" type="submit">
             <Save size={18} />
-            <span>保存草稿</span>
+            <span>保存记录</span>
           </button>
         </div>
       </form>
@@ -483,7 +512,7 @@ function FactorsView({ factors }: { factors: EmissionFactor[] }) {
 
 function RecordsView({ records }: { records: CalculationRecord[] }) {
   if (records.length === 0) {
-    return <div className="empty-state">暂无计算记录。保存任意计算器草稿后会显示在这里。</div>;
+    return <div className="empty-state">暂无计算记录。保存任意计算器计算结果后会显示在这里。</div>;
   }
 
   return (
@@ -494,7 +523,7 @@ function RecordsView({ records }: { records: CalculationRecord[] }) {
             <th>标题</th>
             <th>计算器</th>
             <th>总排放</th>
-            <th>状态</th>
+            <th>分项数</th>
             <th>创建时间</th>
           </tr>
         </thead>
@@ -503,8 +532,8 @@ function RecordsView({ records }: { records: CalculationRecord[] }) {
             <tr key={record.id}>
               <td>{record.title}</td>
               <td>{record.calculator_name}</td>
-              <td>{record.total_emission === null ? '待计算' : `${record.total_emission} ${record.emission_unit}`}</td>
-              <td>{record.result_snapshot?.message ?? '待计算'}</td>
+              <td>{record.total_emission === null ? '计算失败' : `${record.total_emission} ${record.emission_unit}`}</td>
+              <td>{record.result_snapshot?.breakdown?.length ?? 0}</td>
               <td>{record.created_at}</td>
             </tr>
           ))}

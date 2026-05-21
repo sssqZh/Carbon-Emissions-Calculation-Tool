@@ -13,8 +13,8 @@
     "preview": "vite preview --host 127.0.0.1",
     "deploy": "npm run build && wrangler pages deploy dist",
     "db:create": "wrangler d1 create carbon-db",
-    "db:migrate:local": "wrangler d1 execute carbon-db --local --file=migrations/0001_initial.sql",
-    "db:migrate:remote": "wrangler d1 execute carbon-db --remote --file=migrations/0001_initial.sql"
+    "db:migrate:local": "wrangler d1 migrations apply carbon-db --local",
+    "db:migrate:remote": "wrangler d1 migrations apply carbon-db --remote"
   },
   "dependencies": {
     "lucide-react": "^0.468.0",

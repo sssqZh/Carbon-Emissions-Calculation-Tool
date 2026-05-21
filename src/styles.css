@@ -430,6 +430,17 @@ button {
   font-size: 20px;
 }
 
+.breakdown-list {
+  display: grid;
+  gap: 4px;
+  margin-top: 8px;
+}
+
+.breakdown-list span {
+  font-size: 13px;
+  color: #4a5d55;
+}
+
 .notice,
 .empty-state {
   padding: 16px;

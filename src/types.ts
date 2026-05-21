@@ -61,10 +61,7 @@ export type CalculationRecord = {
   total_emission: number | null;
   emission_unit: string;
   created_at: string;
-  result_snapshot: {
-    status?: string;
-    message?: string;
-  } | null;
+  result_snapshot: CalculationResultSnapshot | null;
 };
 
 export type ReferenceItem = {
@@ -77,3 +74,20 @@ export type ReferenceItem = {
   notes: string | null;
   created_at: string;
 };
+
+export interface BreakdownItem {
+  category: string;
+  label: string;
+  value: number;
+  unit: string;
+  formula: string;
+}
+
+export interface CalculationResultSnapshot {
+  status: string;
+  message: string;
+  total_emission: number;
+  emission_unit: string;
+  breakdown: BreakdownItem[];
+  formula_version: string;
+}

@@ -3,6 +3,7 @@ import { existsSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
+import { calculate } from '../shared/calculations.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const dbPath = resolve(root, 'db', 'carbon.sqlite');
@@ -191,21 +192,37 @@ async function createCalculationRecord(req) {
     throw error;
   }
 
-  const title = body.title || `${calculator.name} 草稿记录`;
-  const inputSnapshot = JSON.stringify(body.inputSnapshot || {});
+  const title = body.title || `${calculator.name} 计算记录`;
+  const inputSnapshot_raw = body.inputSnapshot || {};
+
+  // Run the calculation
+  let result;
+  try {
+    result = calculate(slug, inputSnapshot_raw);
+  } catch (calcErr) {
+    result = {
+      total_emission: null,
+      emission_unit: 'kgCO2e',
+      breakdown: [],
+      formula_version: 'unknown',
+    };
+  }
+
+  const inputSnapshot = JSON.stringify(inputSnapshot_raw);
   const resultSnapshot = JSON.stringify({
-    status: 'pending_formula',
-    message: '公式和排放因子尚未接入，当前记录仅保存输入快照。',
+    status: 'completed',
+    message: `总排放量: ${result.total_emission !== null ? result.total_emission + ' ' + result.emission_unit : '计算失败'}`,
+    ...result,
   });
 
   runSql(`
     INSERT INTO calculation_records
       (calculator_id, title, input_snapshot_json, result_snapshot_json, total_emission, emission_unit)
     VALUES
-      (${calculator.id}, ${quoteSql(title)}, ${quoteSql(inputSnapshot)}, ${quoteSql(resultSnapshot)}, NULL, 'kgCO2e');
+      (${calculator.id}, ${quoteSql(title)}, ${quoteSql(inputSnapshot)}, ${quoteSql(resultSnapshot)}, ${result.total_emission === null ? 'NULL' : result.total_emission}, ${quoteSql(result.emission_unit)});
   `, false);
 
-  return { ok: true };
+  return { ok: true, result };
 }
 
 const server = createServer(async (req, res) => {

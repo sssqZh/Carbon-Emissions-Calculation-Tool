@@ -9,3 +9,5 @@ db/*.sqlite-wal
 .DS_Store
 .wrangler/
 .wrangler-deploy/
+.claude/
+references_input/
