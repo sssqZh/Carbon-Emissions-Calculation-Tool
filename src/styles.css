@@ -106,6 +106,16 @@
            transition-colors duration-200;
   }
 
+  /* Dropdown options in dark mode */
+  .field-card select option {
+    @apply bg-white text-gray-900;
+  }
+
+  .dark .field-card select option {
+    background: #1a1f1a;
+    color: #e6edf3;
+  }
+
   .field-card input[type='checkbox'] {
     @apply w-[18px] min-h-[18px] accent-eco-500;
   }
