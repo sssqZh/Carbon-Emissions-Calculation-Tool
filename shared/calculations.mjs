@@ -59,6 +59,7 @@ const FOOD_FACTORS = {
 };
 
 const PORTION_WEIGHT = 0.2;
+const TREE_CO2_PER_YEAR = 18.3;
 
 // ---- Helpers ----
 
@@ -215,6 +216,7 @@ function calculatePersonalFootprint(inputs) {
     emission_unit: 'kgCO2e',
     breakdown,
     formula_version: '1.0',
+    tree_offset: +(total / TREE_CO2_PER_YEAR).toFixed(1),
   };
 }
 
@@ -277,6 +279,7 @@ function calculateGridEmission(inputs) {
     emission_unit: 'kgCO2e/kWh',
     breakdown,
     formula_version: '1.0',
+    tree_offset: +(total / TREE_CO2_PER_YEAR).toFixed(1),
   };
 
   if (electricityAmount > 0) {
@@ -347,6 +350,7 @@ function calculateHotpotEmission(inputs) {
     emission_unit: 'kgCO2e',
     breakdown,
     formula_version: '1.0',
+    tree_offset: +(total / TREE_CO2_PER_YEAR).toFixed(1),
   };
 }
 

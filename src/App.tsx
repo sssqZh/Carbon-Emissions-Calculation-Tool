@@ -1,14 +1,17 @@
 import {
   Activity,
-  Archive,
+  ArrowRight,
   BarChart3,
   BookOpenText,
   Calculator as CalculatorIcon,
+  CheckCircle,
   Clock3,
   Database,
   Leaf,
+  Moon,
   Plus,
   Save,
+  Sun,
   type LucideIcon,
 } from 'lucide-react';
 import { type FormEvent, useEffect, useMemo, useState } from 'react';
@@ -48,7 +51,14 @@ const statusLabels = {
   archived: '已归档',
 };
 
+function getInitialTheme(): 'light' | 'dark' {
+  const stored = localStorage.getItem('theme');
+  if (stored === 'dark' || stored === 'light') return stored;
+  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+}
+
 function App() {
+  const [theme, setTheme] = useState<'light' | 'dark'>(getInitialTheme);
   const [view, setView] = useState<ViewKey>('dashboard');
   const [calculators, setCalculators] = useState<Calculator[]>([]);
   const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
@@ -58,6 +68,15 @@ function App() {
   const [references, setReferences] = useState<ReferenceItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+
+  function toggleTheme() {
+    setTheme((t) => (t === 'light' ? 'dark' : 'light'));
+  }
 
   async function refresh() {
     setError(null);
@@ -138,14 +157,16 @@ function App() {
 
       <main className="main-panel">
         <header className="topbar">
-          <div>
-            <p className="eyebrow">SQLite + React + TypeScript + Vite</p>
-            <h1>{getViewTitle(view)}</h1>
+          <h1>{getViewTitle(view)}</h1>
+          <div className="topbar-right">
+            <button className="theme-toggle" onClick={toggleTheme} type="button" title={theme === 'light' ? '切换暗色模式' : '切换亮色模式'}>
+              {theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}
+            </button>
+            <button className="icon-button" onClick={refresh} type="button" title="刷新数据">
+              <Activity size={18} />
+              <span>刷新</span>
+            </button>
           </div>
-          <button className="icon-button" onClick={refresh} type="button" title="刷新数据">
-            <Activity size={18} />
-            <span>刷新</span>
-          </button>
         </header>
 
         {error && <div className="notice error">{error}</div>}
@@ -184,7 +205,7 @@ function App() {
 function getViewTitle(view: ViewKey) {
   switch (view) {
     case 'dashboard':
-      return '项目概览';
+      return '轻量碳排放计算器';
     case 'calculators':
       return '计算器工作台';
     case 'factors':
@@ -193,6 +214,15 @@ function getViewTitle(view: ViewKey) {
       return '历史记录';
     case 'references':
       return '参考资料';
+  }
+}
+
+function getCalculatorEmoji(slug: string) {
+  switch (slug) {
+    case 'personal-footprint': return '\u{1F6B6}';
+    case 'grid-emission-factor': return '\u26A1';
+    case 'hotpot-emission': return '\u{1F372}';
+    default: return '\u{1F30D}';
   }
 }
 
@@ -211,39 +241,46 @@ function Dashboard({
 }) {
   return (
     <section className="stack">
-      <div className="metric-grid">
-        <Metric icon={CalculatorIcon} label="计算器模块" value={calculators.length} />
-        <Metric icon={Archive} label="已启用模块" value={activeCalculators} />
-        <Metric icon={Database} label="因子记录" value={factorCount} />
-        <Metric icon={Clock3} label="历史记录" value={recordCount} />
+      {/* ── 核心操作区：计算器卡片（置顶） ── */}
+      <div>
+        <div className="section-header">
+          <p className="eyebrow">开始测算</p>
+          <h2>选择要使用的碳排放计算工具</h2>
+        </div>
+        <div className="calculator-grid">
+          {calculators.map((calculator) => (
+            <article
+              className="calculator-card hero-card"
+              key={calculator.slug}
+              onClick={() => onOpenCalculators()}
+            >
+              <span className="card-emoji-badge">{getCalculatorEmoji(calculator.slug)}</span>
+              <div className="card-topline">
+                <span className="category">{calculator.category}</span>
+                <StatusBadge status={calculator.status} />
+              </div>
+              <h3>{calculator.name}</h3>
+              <p>{calculator.description}</p>
+              <div className="card-cta">
+                <span>进入测算</span>
+                <ArrowRight size={16} />
+              </div>
+            </article>
+          ))}
+        </div>
       </div>
 
-      <section className="workband">
-        <div>
-          <p className="eyebrow">第一阶段</p>
-          <h2>先把计算器、字段、因子和记录链路跑通</h2>
-          <p>
-            当前页面已从本地 SQLite 读取计算器配置、字段定义、排放因子和资料记录。具体公式接入后，
-            只需要扩展字段、公式版本和计算接口。
-          </p>
+      {/* ── 系统数据概览（降级到底部） ── */}
+      <div>
+        <div className="section-header">
+          <p className="eyebrow">系统数据</p>
         </div>
-        <button className="primary-button" onClick={onOpenCalculators} type="button">
-          <Plus size={18} />
-          <span>查看计算器</span>
-        </button>
-      </section>
-
-      <div className="calculator-grid">
-        {calculators.map((calculator) => (
-          <article className="calculator-card" key={calculator.slug}>
-            <div className="card-topline">
-              <span className="category">{calculator.category}</span>
-              <StatusBadge status={calculator.status} />
-            </div>
-            <h3>{calculator.name}</h3>
-            <p>{calculator.description}</p>
-          </article>
-        ))}
+        <div className="metric-grid metric-grid-compact">
+          <Metric icon={CalculatorIcon} label="计算器模块" value={calculators.length} trend="全部已启用" />
+          <Metric icon={Database} label="排放因子" value={factorCount} trend="权威数据源" />
+          <Metric icon={Clock3} label="历史记录" value={recordCount} trend="计算记录" />
+          <Metric icon={CheckCircle} label="公式版本" value={3} trend="v1.0 正式版" />
+        </div>
       </div>
     </section>
   );
@@ -253,16 +290,21 @@ function Metric({
   icon: Icon,
   label,
   value,
+  trend,
 }: {
   icon: LucideIcon;
   label: string;
   value: number;
+  trend?: string;
 }) {
   return (
     <article className="metric">
-      <Icon size={20} />
-      <span>{label}</span>
-      <strong>{value}</strong>
+      <div className="metric-icon">
+        <Icon size={18} />
+      </div>
+      <span className="metric-label">{label}</span>
+      <strong className="metric-value">{value}</strong>
+      {trend && <span className="metric-trend">{trend}</span>}
     </article>
   );
 }
@@ -372,6 +414,11 @@ function CalculatorDetailPanel({
             {liveResult && liveResult.total_emission > 0 ? (
               <>
                 <strong>{liveResult.total_emission} {liveResult.emission_unit}</strong>
+                {liveResult.tree_offset > 0 && (
+                  <p className="tree-offset">
+                    🌳 需要 <em>{liveResult.tree_offset}</em> 棵树生长 1 年来抵消
+                  </p>
+                )}
                 {liveResult.breakdown.length > 0 && (
                   <div className="breakdown-list">
                     {liveResult.breakdown.map((item, i) => (

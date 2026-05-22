@@ -24,6 +24,8 @@ export interface CalculationResult {
   emission_unit: string;
   breakdown: BreakdownItem[];
   formula_version: string;
+  /** 需要多少棵树生长1年来抵消（基于每棵树年固碳18.3 kg CO₂） */
+  tree_offset: number;
 }
 
 // ---- Emission Factor Constants ----
@@ -90,6 +92,9 @@ const FOOD_FACTORS: Record<string, { label: string; value: number }> = {
 
 // 每份重量 (kg)
 const PORTION_WEIGHT = 0.2;
+
+// 每棵树每年固碳量 (kg CO₂ / tree / year) — 中国绿色碳汇基金会 / 国家林业局
+const TREE_CO2_PER_YEAR = 18.3;
 
 // ---- Helper ----
 
@@ -251,6 +256,7 @@ export function calculatePersonalFootprint(inputs: Record<string, unknown>): Cal
     emission_unit: 'kgCO2e',
     breakdown,
     formula_version: '1.0',
+    tree_offset: +(total / TREE_CO2_PER_YEAR).toFixed(1),
   };
 }
 
@@ -310,6 +316,7 @@ export function calculateGridEmission(inputs: Record<string, unknown>): Calculat
     emission_unit: 'kgCO2e/kWh',
     breakdown,
     formula_version: '1.0',
+    tree_offset: +(total / TREE_CO2_PER_YEAR).toFixed(1),
   };
 }
 
@@ -369,6 +376,7 @@ export function calculateHotpotEmission(inputs: Record<string, unknown>): Calcul
     emission_unit: 'kgCO2e',
     breakdown,
     formula_version: '1.0',
+    tree_offset: +(total / TREE_CO2_PER_YEAR).toFixed(1),
   };
 }
 

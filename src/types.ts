@@ -90,4 +90,5 @@ export interface CalculationResultSnapshot {
   emission_unit: string;
   breakdown: BreakdownItem[];
   formula_version: string;
+  tree_offset: number;
 }

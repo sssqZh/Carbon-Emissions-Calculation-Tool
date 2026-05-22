@@ -19,6 +19,7 @@ interface CalculationResult {
   emission_unit: string;
   breakdown: BreakdownItem[];
   formula_version: string;
+  tree_offset: number;
 }
 
 const TRAVEL_FACTORS: Record<string, { label: string; value: number; unit: string }> = {
@@ -62,6 +63,7 @@ const POWER_GEN_FACTORS: Record<string, { label: string; value: number }> = {
 
 const TRANSMISSION_FACTOR = 0.0463;
 const PORTION_WEIGHT = 0.2;
+const TREE_CO2_PER_YEAR = 18.3;
 
 const FOOD_FACTORS: Record<string, { label: string; value: number }> = {
   beef:      { label: '牛肉',           value: 60.0 },
@@ -127,7 +129,7 @@ function calcPersonalFootprint(inputs: Record<string, unknown>): CalculationResu
   const lc = safeNum(inputs, 'computer_count');
   if (lc > 0) { const e = lc * CONSUMPTION_FACTORS.computer.value; consumptionTotal += e; breakdown.push({ category: '消费', label: CONSUMPTION_FACTORS.computer.label, value: +e.toFixed(4), unit: 'kgCO2e', formula: `${lc} 台 × ${CONSUMPTION_FACTORS.computer.value} kgCO2e/台` }); }
   const total = travelTotal + dietTotal + housingTotal + consumptionTotal;
-  return { total_emission: +total.toFixed(4), emission_unit: 'kgCO2e', breakdown, formula_version: '1.0' };
+  return { total_emission: +total.toFixed(4), emission_unit: 'kgCO2e', breakdown, formula_version: '1.0', tree_offset: +(total / TREE_CO2_PER_YEAR).toFixed(1) };
 }
 
 function calcGridEmission(inputs: Record<string, unknown>): CalculationResult {
@@ -146,7 +148,7 @@ function calcGridEmission(inputs: Record<string, unknown>): CalculationResult {
   let tx = 0;
   if (safeBool(inputs, 'include_transmission')) { tx = TRANSMISSION_FACTOR; breakdown.push({ category: '输配电', label: '电网输配电修正', value: tx, unit: 'kgCO2e/kWh', formula: `修正系数: ${TRANSMISSION_FACTOR}` }); }
   const gf = wt + tx;
-  return { total_emission: +gf.toFixed(6), emission_unit: 'kgCO2e/kWh', breakdown, formula_version: '1.0' };
+  return { total_emission: +gf.toFixed(6), emission_unit: 'kgCO2e/kWh', breakdown, formula_version: '1.0', tree_offset: +(gf / TREE_CO2_PER_YEAR).toFixed(1) };
 }
 
 function calcHotpotEmission(inputs: Record<string, unknown>): CalculationResult {
@@ -166,7 +168,7 @@ function calcHotpotEmission(inputs: Record<string, unknown>): CalculationResult 
   }
   const pc = total / diners;
   breakdown.push({ category: '汇总', label: `人均排放（${diners}人）`, value: +pc.toFixed(4), unit: 'kgCO2e/人', formula: `${+total.toFixed(4)} ÷ ${diners} = ${+pc.toFixed(4)}` });
-  return { total_emission: +total.toFixed(4), emission_unit: 'kgCO2e', breakdown, formula_version: '1.0' };
+  return { total_emission: +total.toFixed(4), emission_unit: 'kgCO2e', breakdown, formula_version: '1.0', tree_offset: +(total / TREE_CO2_PER_YEAR).toFixed(1) };
 }
 
 function calculate(slug: string, inputs: Record<string, unknown>): CalculationResult {
@@ -347,7 +349,7 @@ async function createCalculationRecord(db: D1Database, request: Request) {
   try {
     result = calculate(slug, inputRaw);
   } catch {
-    result = { total_emission: 0, emission_unit: 'kgCO2e', breakdown: [], formula_version: 'unknown' };
+    result = { total_emission: 0, emission_unit: 'kgCO2e', breakdown: [], formula_version: 'unknown', tree_offset: 0 };
   }
 
   const inputSnapshot = JSON.stringify(inputRaw);
