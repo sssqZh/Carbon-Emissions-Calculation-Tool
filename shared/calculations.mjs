@@ -279,7 +279,7 @@ function calculateGridEmission(inputs) {
     emission_unit: 'kgCO2e/kWh',
     breakdown,
     formula_version: '1.0',
-    tree_offset: +(total / TREE_CO2_PER_YEAR).toFixed(1),
+    tree_offset: +(totalEmission / TREE_CO2_PER_YEAR).toFixed(1),
   };
 
   if (electricityAmount > 0) {
