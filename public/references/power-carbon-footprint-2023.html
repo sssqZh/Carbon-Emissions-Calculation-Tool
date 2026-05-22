@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>2023 年电力碳足迹因子数据</title>
+<style>
+  body { font-family: Inter, sans-serif; max-width: 800px; margin: 0 auto; padding: 24px; color: #17201c; line-height: 1.7; }
+  table { border-collapse: collapse; width: 100%; margin: 12px 0; }
+  th, td { border: 1px solid #ddd; padding: 8px 12px; text-align: left; font-size: 14px; }
+  th { background: #f5f5f5; }
+  h1 { font-size: 22px; border-bottom: 2px solid #176f55; padding-bottom: 8px; }
+  h2 { font-size: 18px; margin-top: 24px; color: #176f55; }
+  pre { background: #f5f7f5; padding: 14px; border-radius: 8px; overflow-x: auto; }
+  blockquote { border-left: 3px solid #176f55; margin: 12px 0; padding: 4px 14px; color: #555; background: #f8faf8; }
+</style>
+</head>
+<body>
+
+<h1>2023 年电力碳足迹因子数据</h1>
+
+<h2>公告信息</h2>
+<table>
+<tr><td>文件名称</td><td>《关于发布 2023 年电力碳足迹因子数据的公告》</td></tr>
+<tr><td>发布机构</td><td>中华人民共和国生态环境部、国家统计局、国家能源局</td></tr>
+<tr><td>发布时间</td><td>2025 年 1 月</td></tr>
+<tr><td>数据年份</td><td>2023 年</td></tr>
+</table>
+
+<h2>各类发电技术生命周期碳足迹因子</h2>
+<table>
+<tr><th>发电类型</th><th>碳足迹因子 (kg CO₂e/kWh)</th><th>碳排等级</th></tr>
+<tr><td>燃煤发电</td><td>0.9440</td><td>极高</td></tr>
+<tr><td>燃气发电</td><td>0.4792</td><td>高</td></tr>
+<tr><td>光伏发电</td><td>0.0545</td><td>低</td></tr>
+<tr><td>生物质发电</td><td>0.0457</td><td>低</td></tr>
+<tr><td>风力发电</td><td>0.0336</td><td>很低</td></tr>
+<tr><td>光热发电</td><td>0.0313</td><td>很低</td></tr>
+<tr><td>水力发电</td><td>0.0143</td><td>极低</td></tr>
+<tr><td>核能发电</td><td>0.0065</td><td>极低</td></tr>
+</table>
+
+<h2>电网输配电修正</h2>
+<table>
+<tr><td>输配电修正系数</td><td>0.0463 kg CO₂e/kWh</td></tr>
+</table>
+
+<h2>计算公式</h2>
+<pre>EF_grid = Σ(能源_i 占比 × 发电因子_i) + 输配电修正</pre>
+
+<blockquote>各因子数值为生态环境部官方发布数据，代表中国 2023 年全国平均水平。</blockquote>
+
+</body>
+</html>

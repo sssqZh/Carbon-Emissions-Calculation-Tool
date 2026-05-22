@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>主要能源碳排放因子 附件 A</title>
+<style>
+  body { font-family: Inter, sans-serif; max-width: 800px; margin: 0 auto; padding: 24px; color: #17201c; line-height: 1.7; }
+  table { border-collapse: collapse; width: 100%; margin: 12px 0; }
+  th, td { border: 1px solid #ddd; padding: 8px 12px; text-align: left; font-size: 14px; }
+  th { background: #f5f5f5; }
+  h1 { font-size: 22px; border-bottom: 2px solid #176f55; padding-bottom: 8px; }
+  h2 { font-size: 18px; margin-top: 24px; color: #176f55; }
+  pre { background: #f5f7f5; padding: 14px; border-radius: 8px; overflow-x: auto; }
+</style>
+</head>
+<body>
+
+<h1>主要能源碳排放因子 附件 A</h1>
+
+<h2>天然气碳排放因子</h2>
+<table>
+<tr><td>天然气单位热值含碳量</td><td>15.32 t C/TJ</td></tr>
+<tr><td>碳氧化率</td><td>99%</td></tr>
+<tr><td>低位发热量</td><td>38.93 MJ/m³</td></tr>
+<tr><td><strong>折算排放因子</strong></td><td><strong>2.160 kg CO₂e/m³</strong></td></tr>
+</table>
+
+<h2>计算方法</h2>
+<pre>EF_gas = 含碳量 × 碳氧化率 × 44/12 × 低位发热量
+      = 15.32 × 0.99 × 3.667 × 0.03893
+      = 2.160 kg CO₂e/m³</pre>
+<p><code>44/12 = 3.667</code> 为 CO₂ 与 C 的分子量比。</p>
+
+<h2>其他常用能源因子参考</h2>
+<table>
+<tr><th>能源类型</th><th>热值</th><th>单位热值含碳量</th><th>排放因子</th><th>单位</th></tr>
+<tr><td>原煤</td><td>20.93 MJ/kg</td><td>26.0 t C/TJ</td><td>1.980</td><td>kg CO₂e/kg</td></tr>
+<tr><td>原油</td><td>41.82 MJ/kg</td><td>20.0 t C/TJ</td><td>3.070</td><td>kg CO₂e/kg</td></tr>
+<tr><td>柴油</td><td>42.65 MJ/kg</td><td>20.2 t C/TJ</td><td>3.140</td><td>kg CO₂e/kg</td></tr>
+<tr><td>液化石油气</td><td>50.18 MJ/kg</td><td>17.2 t C/TJ</td><td>3.170</td><td>kg CO₂e/kg</td></tr>
+</table>
+<p>以上数据参考《省级温室气体清单编制指南》及 IPCC 2006 默认值。</p>
+
+</body>
+</html>

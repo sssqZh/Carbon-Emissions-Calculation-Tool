@@ -37,11 +37,11 @@ WHERE slug = 'hotpot-emission';
 DELETE FROM source_references;
 
 INSERT INTO source_references (title, organization, publication_year, url, citation, notes) VALUES
-  ('个人碳足迹计算参考资料', '项目资料', 2026, NULL, NULL, '出行因子参考国内私家车排量平均水平、深圳市低碳出行方法学等。饮食因子参考牛津大学 Our World in Data 膳食碳足迹研究。'),
-  ('建筑碳排放计算标准 GB/T 51366-2019', '住房和城乡建设部', 2019, NULL, 'GB/T 51366-2019', '用于天然气和自来水等建筑运行相关碳排放因子参考。'),
-  ('主要能源碳排放因子 附件A', '项目资料', 2026, NULL, NULL, '天然气单位燃料排放因子为 2.16 kgCO2/m³。'),
-  ('2023年电力碳足迹因子数据公告', '生态环境部、国家统计局、国家能源局', 2025, NULL, NULL, '用于电网发电生命周期碳足迹因子。2025年1月发布。'),
-  ('食品生命周期碳足迹研究', 'Poore & Nemecek (Science 2018)', 2018, NULL, 'Poore, J., & Nemecek, T. (2018). Reducing food''s environmental impacts through producers and consumers. Science.', '用于火锅食材和饮食结构相关碳排放因子。');
+  ('个人碳足迹计算参考资料', '项目资料', 2026, '/references/personal-carbon-footprint.html', NULL, '出行因子参考国内私家车排量平均水平、深圳市低碳出行方法学等。饮食因子参考牛津大学 Our World in Data 膳食碳足迹研究。'),
+  ('建筑碳排放计算标准 GB/T 51366-2019', '住房和城乡建设部', 2019, '/references/building-carbon-standard.html', 'GB/T 51366-2019', '用于天然气和自来水等建筑运行相关碳排放因子参考。'),
+  ('主要能源碳排放因子 附件A', '项目资料', 2026, '/references/energy-emission-factors.html', NULL, '天然气单位燃料排放因子为 2.16 kgCO2/m³。'),
+  ('2023年电力碳足迹因子数据公告', '生态环境部、国家统计局、国家能源局', 2025, '/references/power-carbon-footprint-2023.html', NULL, '用于电网发电生命周期碳足迹因子。2025年1月发布。'),
+  ('食品生命周期碳足迹研究', 'Poore & Nemecek (Science 2018)', 2018, '/references/food-lifecycle-study.html', 'Poore, J., & Nemecek, T. (2018). Reducing food''s environmental impacts through producers and consumers. Science.', '用于火锅食材和饮食结构相关碳排放因子。');
 
 -- ============================================================================
 -- Formula Versions

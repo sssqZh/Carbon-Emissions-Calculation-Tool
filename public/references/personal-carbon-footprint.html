@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>个人碳足迹计算参考资料</title>
+<style>
+  body { font-family: Inter, sans-serif; max-width: 800px; margin: 0 auto; padding: 24px; color: #17201c; line-height: 1.7; }
+  table { border-collapse: collapse; width: 100%; margin: 12px 0; }
+  th, td { border: 1px solid #ddd; padding: 8px 12px; text-align: left; font-size: 14px; }
+  th { background: #f5f5f5; }
+  h1 { font-size: 22px; border-bottom: 2px solid #176f55; padding-bottom: 8px; }
+  h2 { font-size: 18px; margin-top: 24px; color: #176f55; }
+  code { background: #f0f3f0; padding: 2px 6px; border-radius: 4px; }
+  pre { background: #f5f7f5; padding: 14px; border-radius: 8px; overflow-x: auto; }
+  blockquote { border-left: 3px solid #176f55; margin: 12px 0; padding: 4px 14px; color: #555; background: #f8faf8; }
+</style>
+</head>
+<body>
+
+<h1>个人碳足迹计算参考资料</h1>
+
+<h2>出行碳排放因子</h2>
+<table>
+<tr><th>交通方式</th><th>排放因子 (kg CO₂e)</th><th>单位</th><th>数据来源</th></tr>
+<tr><td>汽油私家车</td><td>0.180</td><td>/km</td><td>国内 1.6L–2.0L 排量车平均综合排放水平</td></tr>
+<tr><td>纯电动车</td><td>0.050</td><td>/km</td><td>全国电力平均碳足迹 × 平均能耗 14 kWh/100km</td></tr>
+<tr><td>公共汽车</td><td>0.030</td><td>/pkm</td><td>《深圳市低碳公共出行碳普惠方法学》</td></tr>
+<tr><td>地铁/轻轨</td><td>0.015</td><td>/pkm</td><td>城市轨道交通人均公里排放</td></tr>
+<tr><td>高铁/火车</td><td>0.019</td><td>/pkm</td><td>IEA 铁路客运生命周期排放均值</td></tr>
+<tr><td>飞机（经济舱）</td><td>0.139</td><td>/pkm</td><td>民航出行人均排放因子行业标准</td></tr>
+</table>
+<p>/km = 每公里排放，/pkm = 每人每公里排放（乘客公里）。</p>
+
+<h2>饮食碳排放因子</h2>
+<table>
+<tr><th>膳食类型</th><th>日排放 (kg CO₂e/天)</th><th>数据来源</th></tr>
+<tr><td>肉食爱好者</td><td>9.0</td><td>Oxford – Our World in Data</td></tr>
+<tr><td>均衡饮食</td><td>6.0</td><td>同上</td></tr>
+<tr><td>素食/鱼素</td><td>4.1</td><td>同上</td></tr>
+<tr><td>纯素食</td><td>2.7</td><td>同上</td></tr>
+</table>
+<blockquote>Poore & Nemecek (2018). Reducing food's environmental impacts through producers and consumers. <em>Science</em>.</blockquote>
+
+<h2>居住能耗碳排放因子</h2>
+<table>
+<tr><th>能源类型</th><th>排放因子</th><th>单位</th><th>数据来源</th></tr>
+<tr><td>电力</td><td>0.5568</td><td>kg CO₂e/kWh</td><td>生态环境部全国电力平均 CO₂ 排放因子</td></tr>
+<tr><td>天然气</td><td>2.160</td><td>kg CO₂e/m³</td><td>《建筑碳排放计算标准》附录 A</td></tr>
+<tr><td>自来水</td><td>0.168</td><td>kg CO₂e/t</td><td>《建筑碳排放计算标准》GB/T 51366-2019</td></tr>
+</table>
+
+<h2>消费碳排放因子</h2>
+<table>
+<tr><th>消费品</th><th>排放因子 (kg CO₂e/件)</th><th>数据来源</th></tr>
+<tr><td>新购衣物</td><td>10.0</td><td>快消衣物生命周期均值</td></tr>
+<tr><td>手机/平板</td><td>80.0</td><td>智能电子设备生命周期碳足迹</td></tr>
+<tr><td>电脑/笔记本</td><td>250.0</td><td>14 寸便携式电脑生命周期碳足迹</td></tr>
+</table>
+
+<h2>计算公式</h2>
+<pre>个人总碳足迹 = 出行 + 饮食 + 居住 + 消费
+
+出行 = Σ(各类交通工具行驶距离 × 对应 EF)
+饮食 = 天数 × 膳食类型 EF
+居住 = 电力 × EF_电 + 天然气 × EF_气 + 用水 × EF_水
+消费 = Σ(购买数量 × 单品 EF)</pre>
+
+</body>
+</html>

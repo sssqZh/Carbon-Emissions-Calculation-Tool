@@ -7,6 +7,7 @@ import {
   CheckCircle,
   Clock3,
   Database,
+  ExternalLink,
   Flame,
   Leaf,
   Moon,
@@ -660,16 +661,37 @@ function RecordsView({ records }: { records: CalculationRecord[] }) {
 function ReferencesView({ references }: { references: ReferenceItem[] }) {
   return (
     <div className="grid grid-cols-3 gap-4 max-lg:grid-cols-1">
-      {references.map((ref) => (
-        <article key={ref.id} className="metric-card">
-          <span className="text-[11px] font-semibold text-eco-600 dark:text-eco-400 uppercase tracking-wider">
-            {ref.organization ?? '待补充机构'}
-          </span>
-          <h3 className="text-base font-bold">{ref.title}</h3>
-          {ref.notes && <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">{ref.notes}</p>}
-          <small className="text-xs text-gray-400 dark:text-gray-500">{ref.publication_year ?? '年份待补充'}</small>
-        </article>
-      ))}
+      {references.map((ref) => {
+        const hasUrl = ref.url && ref.url.length > 0;
+        const inner = (
+          <article className={`metric-card group ${hasUrl ? 'cursor-pointer hover:border-eco-400 dark:hover:border-eco-500/40' : ''}`}>
+            <div className="flex items-start justify-between gap-3">
+              <div className="flex-1">
+                <span className="text-[11px] font-semibold text-eco-600 dark:text-eco-400 uppercase tracking-wider">
+                  {ref.organization ?? '待补充机构'}
+                </span>
+                <h3 className={`text-base font-bold mt-0.5 ${hasUrl ? 'group-hover:text-eco-600 dark:group-hover:text-eco-400 transition-colors' : ''}`}>
+                  {ref.title}
+                </h3>
+              </div>
+              {hasUrl && (
+                <ExternalLink size={15} className="text-gray-300 dark:text-gray-600 group-hover:text-eco-500 transition-colors shrink-0 mt-1" />
+              )}
+            </div>
+            {ref.notes && <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">{ref.notes}</p>}
+            <small className="text-xs text-gray-400 dark:text-gray-500">{ref.publication_year ?? '年份待补充'}</small>
+          </article>
+        );
+
+        if (hasUrl) {
+          return (
+            <a key={ref.id} href={ref.url!} target="_blank" rel="noopener noreferrer" className="block">
+              {inner}
+            </a>
+          );
+        }
+        return <div key={ref.id}>{inner}</div>;
+      })}
     </div>
   );
 }
